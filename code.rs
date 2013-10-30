@@ -27,4 +27,5 @@ fn main() {
 
     match q { ~Pt { x: ref c, y: d } => { println!("c: {:?} d: {}", c, d); } }
     match r { ~NcPt { x: ref c, y: d, n: ref n } => { println!("c: {:?} d: {} n: {}", c, d, n); } }
+    match &r { &~NcPt { x: ref c, y: d, n: ref n } => { println!("c: {:?} d: {} n: {}", c, d, n); } }
 }
