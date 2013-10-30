@@ -28,17 +28,6 @@ fn make_pt(a: int, b: int) -> GC<Pt> {
 // My current inclination: a semi-nonlocal expansion into magic
 // move/copy/borrow methods depending on the nature of the pattern.
 
-fn with_pt_move<T>(p: @Pt, f: fn(int, int) -> T) -> T {
-    match p {
-        @Pt{ x: a, y: b } => f(a, b)
-    }
-}
-// expands to:
-fn with_pt_move<T>(p: GC<Pt>, f: fn(int, int) -> T) -> T {
-    match GC::move(p) {
-        Pt{ x: a, y: b } => f(a, b)
-    }
-}
 
 fn with_pt_borrow<T>(p: @Pt, f: fn(int, int) -> T) -> T {
     match p {
@@ -46,8 +35,32 @@ fn with_pt_borrow<T>(p: @Pt, f: fn(int, int) -> T) -> T {
     }
 }
 // expands to:
-fn with_pt<T>(p: GC<Pt>, f: fn(int, int) -> T) -> T {
+fn with_pt_borrow<T>(p: GC<Pt>, f: fn(int, int) -> T) -> T {
     match GC::borrow(p) {
         &Pt{ x: ref a, y: ref b } => f(a, b)
     }
 }
+
+// In fact its possible the above might suffice, or maybe we'll need
+// borrow and mut_borrow variants.  (The question I was trying to
+// resolve was whether we would also need move/copy, e.g. below)
+
+fn with_pt_is_it_move_or_copy<T>(p: @Pt, f: fn(int, int) -> T) -> T {
+    match p {
+        @Pt{ x: a, y: b } => f(a, b)
+    }
+}
+// expands to:
+fn with_pt_is_it_move_or_copy<T>(p: GC<Pt>, f: fn(int, int) -> T) -> T {
+    match GC::move(p) {
+        Pt{ x: a, y: b } => f(a, b)
+    }
+}
+// or maybe expands to:
+fn with_pt_is_it_move_or_copy<T>(p: GC<Pt>, f: fn(int, int) -> T) -> T {
+    match GC::copy(p) {
+        Pt{ x: a, y: b } => f(a, b)
+    }
+}
+// I cannot yet tell what is necessary (nor what is even
+// possible/desirable).
