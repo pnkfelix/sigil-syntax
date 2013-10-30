@@ -4,12 +4,12 @@ use std::fmt;
 struct Nc(NonCopyable);
 impl Nc { fn new() -> Nc { Nc(NonCopyable) } }
 impl Default for Nc {
-    fn fmt(obj: &Nc, f: &mut fmt::Formatter) {
+    fn fmt(_: &Nc, f: &mut fmt::Formatter) {
         write!(f.buf, "Nc")
     }
 }
 impl<'self> Default for &'self Nc {
-    fn fmt(obj: & &Nc, f: &mut fmt::Formatter) {
+    fn fmt(_: & &Nc, f: &mut fmt::Formatter) {
         write!(f.buf, "&Nc")
     }
 }
