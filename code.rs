@@ -28,4 +28,13 @@ fn main() {
     match q { ~Pt { x: ref c, y: d } => { println!("c: {:?} d: {}", c, d); } }
     match r { ~NcPt { x: ref c, y: d, n: ref n } => { println!("c: {:?} d: {} n: {}", c, d, n); } }
     match &r { &~NcPt { x: ref c, y: d, n: ref n } => { println!("c: {:?} d: {} n: {}", c, d, n); } }
+
+    struct Move { from: @Pt, to: @Pt };
+    let m : @Move = @Move { from: @Pt { x: 1, y: 2 }, to: @Pt{ x: 3, y: 4 } };
+    println!("move: {:?}", m);
+    match m {
+        @Move{ from: @Pt{ x: a, y: b }, to: @Pt{ x: c, y: d } } => {
+            println!("move ({}, {}) to ({}, {})", a, b, c, d);
+        }
+    }
 }
